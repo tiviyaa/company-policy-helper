@@ -21,8 +21,8 @@ export default function DashboardPage() {
         <section className="flex-1 p-6">
           <span className="max-w-7xl mx-auto">
             {/* Dashboard Content */}
-            <span className="flex flex-wrap gap-x-6 gap-y-6 mb-8">
-              <div className="w-full md:w-1/2 lg:w-1/4 bg-white p-6 rounded-lg shadow">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-lg shadow">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">
@@ -30,11 +30,11 @@ export default function DashboardPage() {
                     </h3>
                     <p className="text-2xl font-bold text-gray-900">53</p>
                   </div>
-                  <FaPeopleGroup className="text-3xl text-blue-500" />
+                  <FaPeopleGroup className="text-2xl text-blue-500" />
                 </div>
               </div>
 
-              <div className="w-full md:w-1/2 lg:w-1/4 bg-white p-6 rounded-lg shadow">
+              <div className="bg-white p-6 rounded-lg shadow">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">
@@ -42,11 +42,11 @@ export default function DashboardPage() {
                     </h3>
                     <p className="text-2xl font-bold text-green-600">2</p>
                   </div>
-                  <SlEnvolopeLetter className="text-3xl text-green-500" />
+                  <SlEnvolopeLetter className="text-2xl text-green-500" />
                 </div>
               </div>
 
-              <div className="w-full md:w-1/2 lg:w-1/4 bg-white p-6 rounded-lg shadow">
+              <div className="bg-white p-6 rounded-lg shadow">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">
@@ -54,30 +54,30 @@ export default function DashboardPage() {
                     </h3>
                     <p className="text-2xl font-bold text-blue-600">1</p>
                   </div>
-                  <MdOutlinePendingActions className="text-3xl text-blue-500" />
+                  <MdOutlinePendingActions className="text-2xl text-blue-500" />
                 </div>
               </div>
-            </span>
+            </div>
 
             {/* Recent Transactions */}
             <div className="bg-white rounded-lg shadow mb-4">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
+              <div className="p-3 border-b border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-900">
                   Recent AI Q&A
                 </h2>
               </div>
-              <div className="p-6">
-                <p className="text-gray-500">No Q&A yet!</p>
+              <div className="p-3">
+                <p className="text-xs text-gray-500">No Q&A yet!</p>
               </div>
             </div>
             <div className="bg-white rounded-lg shadow mb-4">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">
+              <div className="p-3 border-b border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-900">
                   Recent Activity Logs
                 </h2>
               </div>
-              <div className="p-6">
-                <p className="text-gray-500">No activity yet!</p>
+              <div className="p-3">
+                <p className="text-xs text-gray-500">No activity yet!</p>
               </div>
             </div>
           </span>

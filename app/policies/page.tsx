@@ -12,7 +12,7 @@ interface Policy {
   category: string;
   effectiveDate: string;
   lastUpdated: string;
-  pdfUrl?: string;
+  file?: string;
 }
 
 const categories = ["All", "HR", "IT", "Finance", "Operations", "Compliance"];
@@ -27,67 +27,101 @@ const PoliciesPage = () => {
     category: "",
     effectiveDate: "",
     lastUpdated: new Date().toISOString().split("T")[0],
-    pdfUrl: "",
+    file: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [error, setError] = useState<string | null>(null);
 
-  // Load sample policies
+  // // Load sample policies
+  // useEffect(() => {
+  //   const samplePolicies: Policy[] = [
+  //     {
+  //       id: 1,
+  //       title: "Remote Work Policy",
+  //       description:
+  //         "Guidelines for employees working remotely, including expectations and equipment provisions.",
+  //       category: "HR",
+  //       effectiveDate: "2023-01-15",
+  //       lastUpdated: "2023-05-20",
+  //       file: "/pdfs/remote-work-policy.pdf",
+  //     },
+  //     {
+  //       id: 2,
+  //       title: "Data Security Policy",
+  //       description:
+  //         "Protocols for handling sensitive company data and preventing security breaches.",
+  //       category: "IT",
+  //       effectiveDate: "2023-02-10",
+  //       lastUpdated: "2023-06-15",
+  //       file: "/pdfs/remote-work-policy.pdf",
+  //     },
+  //     {
+  //       id: 3,
+  //       title: "Expense Reimbursement Policy",
+  //       description:
+  //         "Process for submitting and approving employee expense reports and reimbursements.",
+  //       category: "Finance",
+  //       effectiveDate: "2023-03-01",
+  //       lastUpdated: "2023-04-10",
+  //       file: "/pdfs/remote-work-policy.pdf",
+  //     },
+  //     {
+  //       id: 4,
+  //       title: "Code of Conduct",
+  //       description:
+  //         "Expected behavior and ethical standards for all employees company-wide.",
+  //       category: "HR",
+  //       effectiveDate: "2023-01-01",
+  //       lastUpdated: "2023-01-01",
+  //       file: "/pdfs/remote-work-policy.pdf",
+  //     },
+  //     {
+  //       id: 5,
+  //       title: "Social Media Policy",
+  //       description:
+  //         "Guidelines for employee use of social media in relation to the company.",
+  //       category: "HR",
+  //       effectiveDate: "2023-04-05",
+  //       lastUpdated: "2023-07-12",
+  //       file: "/pdfs/remote-work-policy.pdf",
+  //     },
+  //   ];
+  //   setPolicies(samplePolicies);
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchPolicies = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8000/documents");
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch documents");
+  //       }
+  //       const data = await response.json();
+  //       setPolicies(data);
+  //     } catch (error) {
+  //       console.error("Error fetching policies:", error);
+  //     }
+  //   };
+
+  //   fetchPolicies();
+  // }, []);
+
   useEffect(() => {
-    const samplePolicies: Policy[] = [
-      {
-        id: 1,
-        title: "Remote Work Policy",
-        description:
-          "Guidelines for employees working remotely, including expectations and equipment provisions.",
-        category: "HR",
-        effectiveDate: "2023-01-15",
-        lastUpdated: "2023-05-20",
-        pdfUrl: "/pdfs/remote-work-policy.pdf",
-      },
-      {
-        id: 2,
-        title: "Data Security Policy",
-        description:
-          "Protocols for handling sensitive company data and preventing security breaches.",
-        category: "IT",
-        effectiveDate: "2023-02-10",
-        lastUpdated: "2023-06-15",
-        pdfUrl: "/pdfs/remote-work-policy.pdf",
-      },
-      {
-        id: 3,
-        title: "Expense Reimbursement Policy",
-        description:
-          "Process for submitting and approving employee expense reports and reimbursements.",
-        category: "Finance",
-        effectiveDate: "2023-03-01",
-        lastUpdated: "2023-04-10",
-        pdfUrl: "/pdfs/remote-work-policy.pdf",
-      },
-      {
-        id: 4,
-        title: "Code of Conduct",
-        description:
-          "Expected behavior and ethical standards for all employees company-wide.",
-        category: "HR",
-        effectiveDate: "2023-01-01",
-        lastUpdated: "2023-01-01",
-        pdfUrl: "/pdfs/remote-work-policy.pdf",
-      },
-      {
-        id: 5,
-        title: "Social Media Policy",
-        description:
-          "Guidelines for employee use of social media in relation to the company.",
-        category: "HR",
-        effectiveDate: "2023-04-05",
-        lastUpdated: "2023-07-12",
-        pdfUrl: "/pdfs/remote-work-policy.pdf",
-      },
-    ];
-    setPolicies(samplePolicies);
+    const fetchPolicies = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/policies");
+        if (!response.ok) {
+          throw new Error("Failed to fetch policies");
+        }
+        const data = await response.json();
+        setPolicies(data); // assumes `setPolicies` accepts the array of policies directly
+      } catch (error) {
+        console.error("Error fetching policies:", error);
+      }
+    };
+
+    fetchPolicies();
   }, []);
 
   const handleInputChange = (
@@ -102,10 +136,189 @@ const PoliciesPage = () => {
     });
   };
 
+  // const handleAddPolicy = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   // Validate all required fields
+  //   if (
+  //     !newPolicy.title ||
+  //     !newPolicy.description ||
+  //     !newPolicy.category ||
+  //     !newPolicy.effectiveDate ||
+  //     !policyFile
+  //   ) {
+  //     setError("Please fill in all fields and upload a PDF file.");
+  //     return;
+  //   }
+
+  //   // OPTIONAL: kalau nak submit ke backend
+  //   const formData = new FormData();
+  //   formData.append("title", newPolicy.title);
+  //   formData.append("description", newPolicy.description);
+  //   formData.append("category", newPolicy.category);
+  //   formData.append("effectiveDate", newPolicy.effectiveDate);
+  //   formData.append("pdf", policyFile);
+
+  //   // Contoh: kalau ada API
+  //   // await fetch("/api/policies", {
+  //   //   method: "POST",
+  //   //   body: formData,
+  //   // });
+
+  //   // Save locally to state (mock add)
+  //   const policy: Policy = {
+  //     ...newPolicy,
+  //     id: policies.length + 1,
+  //     lastUpdated: new Date().toISOString().split("T")[0],
+  //     pdfUrl: URL.createObjectURL(policyFile!),
+  //   };
+
+  //   setPolicies([policy, ...policies]);
+
+  //   // Reset form
+  //   setNewPolicy({
+  //     id: 0,
+  //     title: "",
+  //     description: "",
+  //     category: "",
+  //     effectiveDate: "",
+  //     lastUpdated: new Date().toISOString().split("T")[0],
+  //     pdfUrl: "",
+  //   });
+  //   setPolicyFile(null);
+  //   setShowAddForm(false);
+  //   setError(null);
+  // };
+
+  // const handleAddPolicy = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !newPolicy.title ||
+  //     !newPolicy.description ||
+  //     !newPolicy.category ||
+  //     !newPolicy.effectiveDate ||
+  //     !policyFile
+  //   ) {
+  //     setError("Please fill in all fields and upload a PDF file.");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("title", newPolicy.title);
+  //   formData.append("description", newPolicy.description);
+  //   formData.append("category", newPolicy.category);
+  //   formData.append("effectiveDate", newPolicy.effectiveDate); // match backend key
+  //   formData.append("file", policyFile);
+
+  //   try {
+  //     const response = await fetch("http://localhost:8000/documents", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to upload policy");
+  //     }
+
+  //     const result = await response.json();
+
+  //     const newAddedPolicy: Policy = {
+  //       id: Date.now(), // temp ID
+  //       title: result.title,
+  //       description: result.description,
+  //       category: result.category,
+  //       effectiveDate: result.effectiveDate,
+  //       lastUpdated: new Date().toISOString().split("T")[0],
+  //       file: result.file, // returned from FastAPI
+  //     };
+
+  //     setPolicies([newAddedPolicy, ...policies]);
+  //     setNewPolicy({
+  //       id: 0,
+  //       title: "",
+  //       description: "",
+  //       category: "",
+  //       effectiveDate: "",
+  //       lastUpdated: new Date().toISOString().split("T")[0],
+  //       file: "",
+  //     });
+  //     setPolicyFile(null);
+  //     setShowAddForm(false);
+  //     setError(null);
+  //   } catch (error: any) {
+  //     setError(error.message || "An error occurred");
+  //   }
+  // };
+
+  // const handleAddPolicy = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !newPolicy.title ||
+  //     !newPolicy.description ||
+  //     !newPolicy.category ||
+  //     !newPolicy.effectiveDate ||
+  //     !policyFile
+  //   ) {
+  //     setError("Please fill in all fields and upload a PDF file.");
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append("title", newPolicy.title);
+  //   formData.append("description", newPolicy.description);
+  //   formData.append("category", newPolicy.category);
+  //   formData.append("effectiveDate", newPolicy.effectiveDate);
+  //   formData.append("file", policyFile);
+
+  //   try {
+  //     // Fixed: Use correct endpoint URL
+  //     const response = await fetch("http://localhost:8000/policies", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.detail || "Failed to upload policy");
+  //     }
+
+  //     const result = await response.json();
+
+  //     // Fixed: Use the actual ID returned from backend
+  //     const newAddedPolicy: Policy = {
+  //       id: result.id, // Use the actual ID from backend response
+  //       title: result.title,
+  //       description: result.description,
+  //       category: result.category,
+  //       effectiveDate: result.effectiveDate,
+  //       lastUpdated: result.lastUpdated, // Use the actual lastUpdated from backend
+  //       file: result.file,
+  //     };
+
+  //     setPolicies([newAddedPolicy, ...policies]);
+  //     setNewPolicy({
+  //       id: 0,
+  //       title: "",
+  //       description: "",
+  //       category: "",
+  //       effectiveDate: "",
+  //       lastUpdated: "",
+  //       file: "",
+  //     });
+  //     setPolicyFile(null);
+  //     setShowAddForm(false);
+  //     setError(null);
+  //   } catch (error: any) {
+  //     setError(error.message || "An error occurred");
+  //   }
+  // };
+
   const handleAddPolicy = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate all required fields
+    // Check all required fields
     if (
       !newPolicy.title ||
       !newPolicy.description ||
@@ -117,43 +330,62 @@ const PoliciesPage = () => {
       return;
     }
 
-    // OPTIONAL: kalau nak submit ke backend
+    // Check file is a PDF
+    if (policyFile.type !== "application/pdf") {
+      setError("Only PDF files are allowed.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", newPolicy.title);
     formData.append("description", newPolicy.description);
     formData.append("category", newPolicy.category);
     formData.append("effectiveDate", newPolicy.effectiveDate);
-    formData.append("pdf", policyFile);
+    formData.append("file", policyFile); // optional in backend, but required here
 
-    // Contoh: kalau ada API
-    // await fetch("/api/policies", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    try {
+      const response = await fetch("http://localhost:8000/policies", {
+        method: "POST",
+        body: formData,
+      });
 
-    // Save locally to state (mock add)
-    const policy: Policy = {
-      ...newPolicy,
-      id: policies.length + 1,
-      lastUpdated: new Date().toISOString().split("T")[0],
-      pdfUrl: URL.createObjectURL(policyFile!),
-    };
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to upload policy.");
+      }
 
-    setPolicies([policy, ...policies]);
+      const result = await response.json();
 
-    // Reset form
-    setNewPolicy({
-      id: 0,
-      title: "",
-      description: "",
-      category: "",
-      effectiveDate: "",
-      lastUpdated: new Date().toISOString().split("T")[0],
-      pdfUrl: "",
-    });
-    setPolicyFile(null);
-    setShowAddForm(false);
-    setError(null);
+      const newAddedPolicy: Policy = {
+        id: result.id,
+        title: result.title,
+        description: result.description,
+        category: result.category,
+        effectiveDate: result.effectiveDate,
+        lastUpdated: result.lastUpdated,
+        file: result.file || "",
+      };
+
+      // Update UI
+      setPolicies([newAddedPolicy, ...policies]);
+
+      // Reset form
+      setNewPolicy({
+        id: 0,
+        title: "",
+        description: "",
+        category: "",
+        effectiveDate: "",
+        lastUpdated: "",
+        file: "",
+      });
+
+      setPolicyFile(null);
+      setShowAddForm(false);
+      setError(null);
+    } catch (error: any) {
+      setError(error.message || "An error occurred.");
+    }
   };
 
   const handleDeletePolicy = (id: number) => {
@@ -439,16 +671,16 @@ const PoliciesPage = () => {
                     <strong>Last Updated:</strong>{" "}
                     {formatDate(selectedPolicy.lastUpdated)}
                   </p>
-                  {selectedPolicy.pdfUrl && (
+                  {selectedPolicy.file && (
                     <p>
                       <strong>PDF:</strong>{" "}
                       <a
-                        href={selectedPolicy.pdfUrl}
+                        href={selectedPolicy.file}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 underline"
                       >
-                        {selectedPolicy.pdfUrl}
+                        {selectedPolicy.file}
                       </a>
                     </p>
                   )}
@@ -516,9 +748,9 @@ const PoliciesPage = () => {
                         >
                           View Details
                         </button>
-                        {policy.pdfUrl && (
+                        {policy.file && (
                           <a
-                            href={policy.pdfUrl}
+                            href={policy.file}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
